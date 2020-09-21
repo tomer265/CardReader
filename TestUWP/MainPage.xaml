@@ -8,9 +8,10 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid>
-        <Button Content="Scan" Margin="466,166,0,0" VerticalAlignment="Top" Height="153" Width="524" FontSize="72" Click="Button_Click"/>
-        <TextBox HorizontalAlignment="Left" Margin="176,500,0,0" Name="tbOutput" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Width="1120" Height="314"/>
+    <Grid Height="857" Width="1690">
+        <Button Content="Scan" Margin="204,113,0,0" VerticalAlignment="Top" Height="76" Width="145" FontSize="36" Click="Button_Click" Foreground="White" Background="#0074D3"/>
+        <TextBox HorizontalAlignment="Left" Margin="45,0,0,0" Name="tbOutput" Text="" TextWrapping="Wrap" VerticalAlignment="Center" Width="516" Height="450"/>
+        <Image HorizontalAlignment="Left" Height="465" Margin="1279,156,0,0" Name="ImageBox" VerticalAlignment="Top" Width="343"/>
 
     </Grid>
 </Page>
