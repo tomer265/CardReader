@@ -25,6 +25,9 @@ using System.Xml;
 using MongoDB.Driver;
 using Windows.Media.Playback;
 using Windows.Storage;
+using Windows.UI.Xaml.Media.Imaging;
+using Windows.Storage.Pickers;
+using Windows.UI.Popups;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -58,8 +61,15 @@ namespace TestUWP
             await CardAuth();
         }
 
+        private void ClearFields()
+        {
+            ImageBox.Source = null;
+            tbOutput.Text = string.Empty;
+        }
+
         public async Task CardAuth()
         {
+            ClearFields();
             try
             {
                 IReadOnlyList<SmartCard> cards = await reader.FindAllCardsAsync();
@@ -68,12 +78,17 @@ namespace TestUWP
                     SmartCard smartCard = cards.First();
 
                     string buffer64BaseString = await GetCardBase64String(smartCard);
-                    CardHolder cardHolderFromDb = GetCardHolderFromDB(@buffer64BaseString);
+                    CardHolder cardHolderFromDb = await GetCardHolderFromDB(@buffer64BaseString);
+                    
 
                     if (cardHolderFromDb != null)
                     {
+                        string userDropFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+
                         tbOutput.Text += $"Name: {cardHolderFromDb.FirstName} {cardHolderFromDb.LastName}" + Environment.NewLine;
                         tbOutput.Text += $"Date Of Birth: {cardHolderFromDb.DateOfBirth.ToString("dd/MM/yyyy")}" + Environment.NewLine;
+                        await SetImageIframe(userDropFolder, @cardHolderFromDb.PicUrl);
+                        await PlayWelcomeSound(userDropFolder, cardHolderFromDb.VocalFileUrl);
                     }
                     else
                     {
@@ -87,12 +102,42 @@ namespace TestUWP
             }
             catch (Exception e)
             {
-                tbOutput.Text += "Error reading the card." + Environment.NewLine + Environment.NewLine;
-                tbOutput.Text += e.Message + Environment.NewLine;
-                tbOutput.Text += e.InnerException + Environment.NewLine;
-                tbOutput.Text += e.StackTrace + Environment.NewLine;
-                tbOutput.Text += e.Source + Environment.NewLine;
-                tbOutput.Text += e.Data + Environment.NewLine + Environment.NewLine + Environment.NewLine;
+                if (e.GetType().Name == "TimeoutException")
+                {
+                    tbOutput.Text += "Error reading the card." + Environment.NewLine;
+                    tbOutput.Text += "MongoDB server took to long to respond. Try again later." + Environment.NewLine + Environment.NewLine + Environment.NewLine;
+                }
+                else
+                {
+                    tbOutput.Text += "Error reading the card." + Environment.NewLine + Environment.NewLine;
+                    tbOutput.Text += e.Message + Environment.NewLine;
+                    tbOutput.Text += e.InnerException + Environment.NewLine;
+                    tbOutput.Text += e.StackTrace + Environment.NewLine;
+                    tbOutput.Text += e.Source + Environment.NewLine;
+                    tbOutput.Text += e.Data + Environment.NewLine + Environment.NewLine + Environment.NewLine;
+                }
+            }
+        }
+
+        private async Task PlayWelcomeSound(string userDropFolder, string vocalFileUrl)
+        {
+            MediaElement mysong = new MediaElement();
+            StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(@userDropFolder);
+            StorageFile file = await folder.GetFileAsync(@vocalFileUrl);
+            var stream = await file.OpenAsync(FileAccessMode.Read);
+            mysong.SetSource(stream, file.ContentType);
+            mysong.Play();
+        }
+
+        private async Task SetImageIframe(string userDropFolder, string fileUrl)
+        {
+            BitmapImage bitmap = new BitmapImage();
+            StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(@userDropFolder);
+            StorageFile file = await folder.GetFileAsync(@fileUrl);
+            using (var stream = await file.OpenAsync(FileAccessMode.Read))
+            {
+                bitmap.SetSource(stream);
+                ImageBox.Source = bitmap;
             }
         }
 
@@ -100,7 +145,9 @@ namespace TestUWP
         {
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
             {
+                ScanBtn.ClickMode = ClickMode.Press;
                 await CardAuth();
+                ScanBtn.ClickMode = ClickMode.Release;
             });
         }
 
@@ -115,15 +162,26 @@ namespace TestUWP
             return buffer64BaseString;
         }
 
-        private CardHolder GetCardHolderFromDB(string CardIdentifier)
+        private async Task<CardHolder> GetCardHolderFromDB(string CardIdentifier)
         {
+            ContentDialog cd = new ContentDialog()
+            {
+                Content = "Retrieving card holder from database",
+                Title = "Please Wait",
+                CloseButtonText = "OK"
+            };
+            await cd.ShowAsync();
+
+            AppPage.Opacity = 0.5;
+            
+
             string connectionString = GetConnectionStringFromConfigFile().Trim();
             MongoClient client = new MongoClient(@connectionString);
             IMongoDatabase dataBase = client.GetDatabase("CardReader");
             IMongoCollection<CardHolder> collection = dataBase.GetCollection<CardHolder>("CardHolders");
-            collection.InsertOne
-            //CardHolder result = collection.Find(ch => ch.CardIdentifier == CardIdentifier).FirstOrDefault();
-
+            //collection.InsertOne
+            CardHolder result = collection.Find(ch => ch.CardIdentifier == CardIdentifier).FirstOrDefault();
+            //AppPage.Opacity = 1;
             return result;
         }
 

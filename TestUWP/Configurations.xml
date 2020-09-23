@@ -1,4 +1,4 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <AppSettings>
-  <ConnectionString>mongodb://m001-student:tomer1992@cluster0.db25y.mongodb.net/?retryWrites=true&amp;w=majority</ConnectionString>
+  <ConnectionString>mongodb+srv://m001-student:tomer1992@cluster0.db25y.mongodb.net/?retryWrites=true&amp;w=majority</ConnectionString>
 </AppSettings>

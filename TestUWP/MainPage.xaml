@@ -1,4 +1,5 @@
-﻿<Page
+﻿<Page 
+    Name="AppPage" 
     x:Class="TestUWP.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -6,12 +7,15 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" d:DesignWidth="1889.189">
 
     <Grid Height="857" Width="1690">
-        <Button Content="Scan" Margin="204,113,0,0" VerticalAlignment="Top" Height="76" Width="145" FontSize="36" Click="Button_Click" Foreground="White" Background="#0074D3"/>
-        <TextBox HorizontalAlignment="Left" Margin="45,0,0,0" Name="tbOutput" Text="" TextWrapping="Wrap" VerticalAlignment="Center" Width="516" Height="450"/>
-        <Image HorizontalAlignment="Left" Height="465" Margin="1279,156,0,0" Name="ImageBox" VerticalAlignment="Top" Width="343"/>
-
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="102*"/>
+            <ColumnDefinition Width="67*"/>
+        </Grid.ColumnDefinitions>
+        <Button Name="ScanBtn" Content="Scan" Margin="462,81,0,0" VerticalAlignment="Top" Height="76" Width="145" FontSize="36" Click="Button_Click" Foreground="White" Background="#0074D3"/>
+        <TextBox HorizontalAlignment="Left" Margin="277,0,0,0" Name="tbOutput" Text="" TextWrapping="Wrap" VerticalAlignment="Center" Width="516" Height="450" IsEnabled="False"/>
+        <Image HorizontalAlignment="Left" MinHeight="470" MinWidth="340" Height="465" Margin="104,189,0,0" Name="ImageBox" VerticalAlignment="Top" Width="343" Grid.Column="1"/>
     </Grid>
 </Page>

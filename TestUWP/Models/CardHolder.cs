@@ -17,5 +17,6 @@ namespace TestUWP.Models
         public string PicUrl { get; set; }
         public string VocalFileUrl { get; set; }
         public string CardIdentifier { get; set; }
+        public string GovernmentId { get; set; }
     }
 }
