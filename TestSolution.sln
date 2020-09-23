@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30413.136
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestWinform", "TestWinform\TestWinform.csproj", "{8870DEE6-B41C-4550-BB4C-10CB90CB8A71}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestUWP", "TestUWP\TestUWP.csproj", "{46BB00C0-5A84-4EDC-9CB0-AF2EC0F47556}"
 EndProject
 Global
@@ -21,26 +19,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{8870DEE6-B41C-4550-BB4C-10CB90CB8A71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8870DEE6-B41C-4550-BB4C-10CB90CB8A71}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8870DEE6-B41C-4550-BB4C-10CB90CB8A71}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{8870DEE6-B41C-4550-BB4C-10CB90CB8A71}.Debug|ARM.Build.0 = Debug|Any CPU
-		{8870DEE6-B41C-4550-BB4C-10CB90CB8A71}.Debug|ARM64.ActiveCfg = Debug|Any CPU
-		{8870DEE6-B41C-4550-BB4C-10CB90CB8A71}.Debug|ARM64.Build.0 = Debug|Any CPU
-		{8870DEE6-B41C-4550-BB4C-10CB90CB8A71}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{8870DEE6-B41C-4550-BB4C-10CB90CB8A71}.Debug|x64.Build.0 = Debug|Any CPU
-		{8870DEE6-B41C-4550-BB4C-10CB90CB8A71}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{8870DEE6-B41C-4550-BB4C-10CB90CB8A71}.Debug|x86.Build.0 = Debug|Any CPU
-		{8870DEE6-B41C-4550-BB4C-10CB90CB8A71}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8870DEE6-B41C-4550-BB4C-10CB90CB8A71}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8870DEE6-B41C-4550-BB4C-10CB90CB8A71}.Release|ARM.ActiveCfg = Release|Any CPU
-		{8870DEE6-B41C-4550-BB4C-10CB90CB8A71}.Release|ARM.Build.0 = Release|Any CPU
-		{8870DEE6-B41C-4550-BB4C-10CB90CB8A71}.Release|ARM64.ActiveCfg = Release|Any CPU
-		{8870DEE6-B41C-4550-BB4C-10CB90CB8A71}.Release|ARM64.Build.0 = Release|Any CPU
-		{8870DEE6-B41C-4550-BB4C-10CB90CB8A71}.Release|x64.ActiveCfg = Release|Any CPU
-		{8870DEE6-B41C-4550-BB4C-10CB90CB8A71}.Release|x64.Build.0 = Release|Any CPU
-		{8870DEE6-B41C-4550-BB4C-10CB90CB8A71}.Release|x86.ActiveCfg = Release|Any CPU
-		{8870DEE6-B41C-4550-BB4C-10CB90CB8A71}.Release|x86.Build.0 = Release|Any CPU
 		{46BB00C0-5A84-4EDC-9CB0-AF2EC0F47556}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{46BB00C0-5A84-4EDC-9CB0-AF2EC0F47556}.Debug|Any CPU.Build.0 = Debug|x86
 		{46BB00C0-5A84-4EDC-9CB0-AF2EC0F47556}.Debug|Any CPU.Deploy.0 = Debug|x86

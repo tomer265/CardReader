@@ -18,12 +18,13 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using Windows.Storage.Streams;
 using System.Text;
 using TestUWP.Models;
 using System.Xml.Linq;
 using System.Xml;
 using MongoDB.Driver;
+using Windows.Media.Playback;
+using Windows.Storage;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -71,8 +72,8 @@ namespace TestUWP
 
                     if (cardHolderFromDb != null)
                     {
-                        tbOutput.Text += "Name: " + cardHolderFromDb.FirstName + cardHolderFromDb.LastName + Environment.NewLine;
-                        tbOutput.Text += "Date Of Birth" + cardHolderFromDb.DateOfBirth.ToString("dd/MM/yyyy") + Environment.NewLine;
+                        tbOutput.Text += $"Name: {cardHolderFromDb.FirstName} {cardHolderFromDb.LastName}" + Environment.NewLine;
+                        tbOutput.Text += $"Date Of Birth: {cardHolderFromDb.DateOfBirth.ToString("dd/MM/yyyy")}" + Environment.NewLine;
                     }
                     else
                     {
@@ -118,10 +119,10 @@ namespace TestUWP
         {
             string connectionString = GetConnectionStringFromConfigFile().Trim();
             MongoClient client = new MongoClient(@connectionString);
-            IMongoDatabase dataBase = client.GetDatabase("CardReaderUWP");
+            IMongoDatabase dataBase = client.GetDatabase("CardReader");
             IMongoCollection<CardHolder> collection = dataBase.GetCollection<CardHolder>("CardHolders");
-
-            CardHolder result = collection.Find(ch => ch.CardIdentifier == CardIdentifier).FirstOrDefault();
+            collection.InsertOne
+            //CardHolder result = collection.Find(ch => ch.CardIdentifier == CardIdentifier).FirstOrDefault();
 
             return result;
         }
