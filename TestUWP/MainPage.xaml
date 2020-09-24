@@ -15,7 +15,7 @@
             <ColumnDefinition Width="67*"/>
         </Grid.ColumnDefinitions>
         <Button Name="ScanBtn" Content="Scan" Margin="462,81,0,0" VerticalAlignment="Top" Height="76" Width="145" FontSize="36" Click="Button_Click" Foreground="White" Background="#0074D3"/>
-        <TextBox HorizontalAlignment="Left" Margin="277,0,0,0" Name="tbOutput" Text="" TextWrapping="Wrap" VerticalAlignment="Center" Width="516" Height="450" IsEnabled="False"/>
+        <TextBox HorizontalAlignment="Left" Margin="277,0,0,0" Name="tbOutput" Text="" TextWrapping="Wrap" VerticalAlignment="Center" Width="516" Height="450" IsEnabled="False" FontSize="26"/>
         <Image HorizontalAlignment="Left" MinHeight="470" MinWidth="340" Height="465" Margin="104,189,0,0" Name="ImageBox" VerticalAlignment="Top" Width="343" Grid.Column="1"/>
     </Grid>
 </Page>

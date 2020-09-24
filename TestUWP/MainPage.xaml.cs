@@ -28,6 +28,8 @@ using Windows.Storage;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.Storage.Pickers;
 using Windows.UI.Popups;
+using System.Net;
+using TestUWP.DialogBoxes;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -58,7 +60,10 @@ namespace TestUWP
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            await CardAuth();
+            var vd = new CreateNewCardHolderContentDialog();
+            await vd.ShowAsync();
+
+            //await CardAuth();
         }
 
         private void ClearFields()
@@ -69,7 +74,7 @@ namespace TestUWP
 
         public async Task CardAuth()
         {
-            ClearFields();
+            return;
             try
             {
                 IReadOnlyList<SmartCard> cards = await reader.FindAllCardsAsync();
@@ -102,10 +107,16 @@ namespace TestUWP
             }
             catch (Exception e)
             {
-                if (e.GetType().Name == "TimeoutException")
+                string errorName = e.GetType().Name;
+                if (errorName == "TimeoutException")
                 {
                     tbOutput.Text += "Error reading the card." + Environment.NewLine;
                     tbOutput.Text += "MongoDB server took to long to respond. Try again later." + Environment.NewLine + Environment.NewLine + Environment.NewLine;
+                }
+                else if (errorName == "DnsResponseException")
+                {
+                    tbOutput.Text += "Error reading the card." + Environment.NewLine;
+                    tbOutput.Text += "There is a problem with the DNS address used. Try using another DNS address." + Environment.NewLine + Environment.NewLine + Environment.NewLine;
                 }
                 else
                 {
@@ -167,21 +178,33 @@ namespace TestUWP
             ContentDialog cd = new ContentDialog()
             {
                 Content = "Retrieving card holder from database",
-                Title = "Please Wait",
+                Title = "Please Wait.",
                 CloseButtonText = "OK"
             };
             await cd.ShowAsync();
 
-            AppPage.Opacity = 0.5;
+            //AppPage.Opacity = 0.5;
             
 
             string connectionString = GetConnectionStringFromConfigFile().Trim();
             MongoClient client = new MongoClient(@connectionString);
             IMongoDatabase dataBase = client.GetDatabase("CardReader");
             IMongoCollection<CardHolder> collection = dataBase.GetCollection<CardHolder>("CardHolders");
-            //collection.InsertOne
             CardHolder result = collection.Find(ch => ch.CardIdentifier == CardIdentifier).FirstOrDefault();
-            //AppPage.Opacity = 1;
+            if (result == null)
+            {
+                cd = new NoCardDataContentDialog();
+
+                var userSelection = await cd.ShowAsync();
+                if (userSelection == ContentDialogResult.Primary || userSelection == ContentDialogResult.None)
+                {
+                    return null;
+                }
+                else if (userSelection == ContentDialogResult.Secondary)
+                {
+
+                }
+            }
             return result;
         }
 
