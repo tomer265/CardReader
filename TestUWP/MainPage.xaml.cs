@@ -30,6 +30,9 @@ using Windows.Storage.Pickers;
 using Windows.UI.Popups;
 using System.Net;
 using TestUWP.DialogBoxes;
+using Windows.ApplicationModel.Core;
+using Windows.UI.Core;
+using Windows.UI.ViewManagement;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -43,6 +46,7 @@ namespace TestUWP
         private SmartCardReader reader;
         public MainPage()
         {
+            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Maximized;
             this.InitializeComponent();
             Task setReaderTask = SetReaderAndEvents();
             Task.Run(async () => await setReaderTask);
@@ -60,10 +64,10 @@ namespace TestUWP
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            var vd = new CreateNewCardHolderContentDialog();
-            await vd.ShowAsync();
+            //var vd = new CreateNewCardHolderContentDialog();
+            //await vd.ShowAsync();
 
-            //await CardAuth();
+            await CardAuth();
         }
 
         private void ClearFields()
@@ -74,7 +78,7 @@ namespace TestUWP
 
         public async Task CardAuth()
         {
-            return;
+            ClearFields();
             try
             {
                 IReadOnlyList<SmartCard> cards = await reader.FindAllCardsAsync();
@@ -187,10 +191,11 @@ namespace TestUWP
             
 
             string connectionString = GetConnectionStringFromConfigFile().Trim();
-            MongoClient client = new MongoClient(@connectionString);
-            IMongoDatabase dataBase = client.GetDatabase("CardReader");
-            IMongoCollection<CardHolder> collection = dataBase.GetCollection<CardHolder>("CardHolders");
-            CardHolder result = collection.Find(ch => ch.CardIdentifier == CardIdentifier).FirstOrDefault();
+            //MongoClient client = new MongoClient(@connectionString);
+            //IMongoDatabase dataBase = client.GetDatabase("CardReader");
+            //IMongoCollection<CardHolder> collection = dataBase.GetCollection<CardHolder>("CardHolders");
+            //CardHolder result = collection.Find(ch => ch.CardIdentifier == CardIdentifier).FirstOrDefault();
+            CardHolder result = null;
             if (result == null)
             {
                 cd = new NoCardDataContentDialog();
@@ -202,6 +207,27 @@ namespace TestUWP
                 }
                 else if (userSelection == ContentDialogResult.Secondary)
                 {
+                    ApplicationView currentAV = ApplicationView.GetForCurrentView();
+                    CoreApplicationView newAV = CoreApplication.CreateNewView();
+                    await newAV.Dispatcher.RunAsync(
+                                    CoreDispatcherPriority.Normal,
+                                    async () =>
+                                    {
+                                        Window newWindow = Window.Current;
+                                        ApplicationView newAppView = ApplicationView.GetForCurrentView();
+                                        newAppView.Title = "New window";
+
+                                        Frame frame = new Frame();
+                                        frame.Navigate(typeof(CreateCardHolder), null);
+                                        newWindow.Content = frame;
+                                        newWindow.Activate();
+
+                                        await ApplicationViewSwitcher.TryShowAsStandaloneAsync(
+                                            newAppView.Id,
+                                            ViewSizePreference.UseMinimum,
+                                            currentAV.Id,
+                                            ViewSizePreference.UseMinimum);
+                                    });
 
                 }
             }
