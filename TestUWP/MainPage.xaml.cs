@@ -33,6 +33,7 @@ using TestUWP.DialogBoxes;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
+using Windows.Graphics.Display;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -46,41 +47,58 @@ namespace TestUWP
         private SmartCardReader reader;
         public MainPage()
         {
-            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Maximized;
             this.InitializeComponent();
+            MaximizeWindowOnLoad();
             Task setReaderTask = SetReaderAndEvents();
             Task.Run(async () => await setReaderTask);
+        }
+
+        private void MaximizeWindowOnLoad()
+        {
+            DisplayInformation view = DisplayInformation.GetForCurrentView();
+
+            Size resolution = new Size(view.ScreenWidthInRawPixels, view.ScreenHeightInRawPixels);
+            double scale = view.ResolutionScale == ResolutionScale.Invalid ? 1 : view.RawPixelsPerViewPixel;
+            Size bounds = new Size(resolution.Width / scale, resolution.Height / scale);
+
+            ApplicationView.PreferredLaunchViewSize = new Size(bounds.Width, bounds.Height);
+            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
         }
 
         private async Task SetReaderAndEvents()
         {
             string selector = SmartCardReader.GetDeviceSelector();
-            DeviceInformationCollection devices = await DeviceInformation.FindAllAsync(selector);
 
+            DeviceInformationCollection devices = await DeviceInformation.FindAllAsync(selector);
             DeviceInformation device = devices[0];
+
             reader = await SmartCardReader.FromIdAsync(device.Id);
             reader.CardAdded += Reader_CardAdded;
         }
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            //var vd = new CreateNewCardHolderContentDialog();
-            //await vd.ShowAsync();
-
             await CardAuth();
         }
 
         private void ClearFields()
         {
-            ImageBox.Source = null;
+            imageBox.Source = null;
             tbOutput.Text = string.Empty;
         }
 
         public async Task CardAuth()
         {
             ClearFields();
+            CardHolder test = await GetCardHolderFromDB("");
+            return;
             try
             {
+                if (reader == null)
+                {
+                    tbOutput.Text += "No card reader detected." + Environment.NewLine;
+                    return;
+                }
                 IReadOnlyList<SmartCard> cards = await reader.FindAllCardsAsync();
                 if (cards.Any())
                 {
@@ -152,7 +170,7 @@ namespace TestUWP
             using (var stream = await file.OpenAsync(FileAccessMode.Read))
             {
                 bitmap.SetSource(stream);
-                ImageBox.Source = bitmap;
+                imageBox.Source = bitmap;
             }
         }
 
@@ -207,7 +225,6 @@ namespace TestUWP
                 }
                 else if (userSelection == ContentDialogResult.Secondary)
                 {
-                    ApplicationView currentAV = ApplicationView.GetForCurrentView();
                     CoreApplicationView newAV = CoreApplication.CreateNewView();
                     await newAV.Dispatcher.RunAsync(
                                     CoreDispatcherPriority.Normal,
@@ -215,7 +232,7 @@ namespace TestUWP
                                     {
                                         Window newWindow = Window.Current;
                                         ApplicationView newAppView = ApplicationView.GetForCurrentView();
-                                        newAppView.Title = "New window";
+                                        newAppView.Title = "Create New Card Holder";
 
                                         Frame frame = new Frame();
                                         frame.Navigate(typeof(CreateCardHolder), null);
@@ -224,9 +241,8 @@ namespace TestUWP
 
                                         await ApplicationViewSwitcher.TryShowAsStandaloneAsync(
                                             newAppView.Id,
-                                            ViewSizePreference.UseMinimum,
-                                            currentAV.Id,
-                                            ViewSizePreference.UseMinimum);
+                                            ViewSizePreference.UseHalf);
+                                        newAppView.TryResizeView(new Size { Width = 743, Height = 936 });
                                     });
 
                 }

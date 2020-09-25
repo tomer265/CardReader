@@ -6,13 +6,34 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="#FF999999">
+    Background="#FF999999" Height="936" Width="743">
 
     <Grid Margin="0,0,10,0">
-        <TextBox HorizontalAlignment="Center" Margin="0,400,0,0" Text="TextBox" TextWrapping="Wrap" VerticalAlignment="Top" Height="50" Width="456"/>
-        <TextBox HorizontalAlignment="Center" Margin="0,500,0,0" Text="TextBox" TextWrapping="Wrap" VerticalAlignment="Top" Height="50" Width="456"/>
-        <TextBox HorizontalAlignment="Center" Margin="0,600,0,0" Text="TextBox" TextWrapping="Wrap" VerticalAlignment="Top" Height="50" Width="456"/>
-        <TextBox HorizontalAlignment="Center" Margin="0,700,0,0" Text="TextBox" TextWrapping="Wrap" VerticalAlignment="Top" Height="50" Width="456"/>
-
+        <TextBox HorizontalAlignment="Left" Margin="29,350,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="90" Width="381" FontSize="36">
+            <TextBox.Header>
+                <TextBlock  Text="First Name:" FontSize="24"></TextBlock>
+            </TextBox.Header>
+        </TextBox>
+        <TextBox HorizontalAlignment="Left" Margin="29,450,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="90" Width="381" FontSize="34">
+            <TextBox.Header>
+                <TextBlock  Text="Last Name:" FontSize="24"></TextBlock>
+            </TextBox.Header>
+        </TextBox>
+        <TextBox HorizontalAlignment="Left" Margin="29,550,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="90" Width="381" FontSize="34">
+            <TextBox.Header>
+                <TextBlock  Text="ID:" FontSize="24"></TextBlock>
+            </TextBox.Header>
+        </TextBox>
+        <DatePicker Margin="29,655,0,0" VerticalAlignment="Top" Height="90" Width="381" FontSize="34">
+            <DatePicker.Header>
+                <TextBlock  Text="Date Of Birth:" FontSize="24"></TextBlock>
+            </DatePicker.Header>
+        </DatePicker>
+        <Button Content="Create Card Holder" Name="btnCreateHolder"  Margin="194,809,0,0" VerticalAlignment="Top" Height="58" Width="381"/>
+        <Button Content="Picture" Margin="493,0,0,0" Height="150" Width="164"/>
+        <Button Name="btnAddRecording" Click="AddRecordingToNewCardHolder" Margin="493,390,0,0" Height="150" Width="164">
+            <Image Source="/Assets/mic.png" />
+        </Button>
+        <Border BorderThickness="1" BorderBrush="Black" Margin="242,53,205,620"/>
     </Grid>
 </Page>

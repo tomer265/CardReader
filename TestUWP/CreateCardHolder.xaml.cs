@@ -3,8 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
+using Windows.Storage.Pickers;
+using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -26,6 +30,31 @@ namespace TestUWP
         public CreateCardHolder()
         {
             this.InitializeComponent();
+        }
+
+        private async void AddRecordingToNewCardHolder(object sender, RoutedEventArgs e)
+        {
+            string recordingFilePath = await GetRecordingFilePath();
+        }
+
+        private async Task<string> GetRecordingFilePath()
+        {
+            FileOpenPicker recordingPicker = new FileOpenPicker()
+            {
+                SuggestedStartLocation = PickerLocationId.DocumentsLibrary,
+                CommitButtonText = "Add Recording",
+                ViewMode = PickerViewMode.List,
+                FileTypeFilter = { ".m4a", ".wav", ".mp3", ".wma" }
+            };
+
+            StorageFile recordingFile = await recordingPicker.PickSingleFileAsync();
+
+            if (recordingFile != null)
+            {
+                btnAddRecording.Background = new SolidColorBrush(Colors.ForestGreen);
+                return recordingFile.Path;
+            }
+            return string.Empty;
         }
     }
 }
