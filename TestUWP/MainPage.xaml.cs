@@ -34,6 +34,7 @@ using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.Graphics.Display;
+using TestUWP.Common;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -90,8 +91,8 @@ namespace TestUWP
         public async Task CardAuth()
         {
             ClearFields();
-            CardHolder test = await GetCardHolderFromDB("");
-            return;
+            //await GetCardHolderFromDB("");
+            //return;
             try
             {
                 if (reader == null)
@@ -176,7 +177,7 @@ namespace TestUWP
 
         private async void Reader_CardAdded(object sender, CardAddedEventArgs args)
         {
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
                 ScanBtn.ClickMode = ClickMode.Press;
                 await CardAuth();
@@ -205,15 +206,12 @@ namespace TestUWP
             };
             await cd.ShowAsync();
 
-            //AppPage.Opacity = 0.5;
-            
-
-            string connectionString = GetConnectionStringFromConfigFile().Trim();
-            //MongoClient client = new MongoClient(@connectionString);
-            //IMongoDatabase dataBase = client.GetDatabase("CardReader");
-            //IMongoCollection<CardHolder> collection = dataBase.GetCollection<CardHolder>("CardHolders");
-            //CardHolder result = collection.Find(ch => ch.CardIdentifier == CardIdentifier).FirstOrDefault();
-            CardHolder result = null;
+            string connectionString = CommonFunctions.GetConnectionStringFromConfigFile();
+            MongoClient client = new MongoClient(@connectionString);
+            IMongoDatabase dataBase = client.GetDatabase("CardReader");
+            IMongoCollection<CardHolder> collection = dataBase.GetCollection<CardHolder>("CardHolders");
+            CardHolder result = collection.Find(ch => ch.CardIdentifier == CardIdentifier).FirstOrDefault();
+            //CardHolder result = null;
             if (result == null)
             {
                 cd = new NoCardDataContentDialog();
@@ -235,7 +233,7 @@ namespace TestUWP
                                         newAppView.Title = "Create New Card Holder";
 
                                         Frame frame = new Frame();
-                                        frame.Navigate(typeof(CreateCardHolder), null);
+                                        frame.Navigate(typeof(CreateCardHolder), CardIdentifier);
                                         newWindow.Content = frame;
                                         newWindow.Activate();
 
@@ -248,14 +246,6 @@ namespace TestUWP
                 }
             }
             return result;
-        }
-
-        private string GetConnectionStringFromConfigFile()
-        {
-            XmlDocument configurationsFile = new XmlDocument();
-            configurationsFile.Load("Configurations.xml");
-            XmlNode node = configurationsFile.SelectSingleNode("/AppSettings/ConnectionString");
-            return node.InnerText;
         }
     }
 }

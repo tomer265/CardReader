@@ -9,11 +9,18 @@ namespace TestUWP.DialogBoxes
 {
     public class CreateNewCardHolderContentDialog : ContentDialog
     {
-        TextBlock UserName = new TextBlock();
-
-        public CreateNewCardHolderContentDialog()
+        public CreateNewCardHolderContentDialog(string message, bool isSuccess)
         {
-            UserName.Text = "Hi tomer";
+            Content = message;
+            PrimaryButtonText = "OK";
+            if (!isSuccess)
+            {
+                Title = "Error Creating New Card Holder";
+            }
+            else
+            {
+                Title = "Creating New Card Holder Success";
+            }
         }
     }
 }
