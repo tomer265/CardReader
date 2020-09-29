@@ -10,6 +10,7 @@ using TestUWP.DialogBoxes;
 using TestUWP.Models;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Graphics.Display;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI;
@@ -41,6 +42,7 @@ namespace TestUWP
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             CardIdentifier = (string)e.Parameter;
+
         }
 
         private async void AddPictureToNewCardHolder(object sender, RoutedEventArgs e)
@@ -83,7 +85,7 @@ namespace TestUWP
             {
                 SuggestedStartLocation = PickerLocationId.PicturesLibrary,
                 CommitButtonText = "Add Picture",
-                ViewMode = PickerViewMode.List,
+                ViewMode = PickerViewMode.Thumbnail,
                 FileTypeFilter = { ".jpg", ".jpeg", ".png", ".bmp" }
             };
 
@@ -103,19 +105,74 @@ namespace TestUWP
         {
             CreateNewCardHolderContentDialog createNewCardHolderContentDialog;
             string connectionString = CommonFunctions.GetConnectionStringFromConfigFile();
+            bool isAllFieldsFilled = true;
+            List<string> fieldsNamesToFill = new List<string>();
             try
             {
-                CardHolderToAdd.FirstName = HolderFirstNameTb.Text;
-                CardHolderToAdd.LastName = HolderLastNameTb.Text;
-                CardHolderToAdd.GovernmentId = HolderIDTb.Text;
-                CardHolderToAdd.DateOfBirth = HolderDOBTb.Date.Date;
-                CardHolderToAdd.CardIdentifier = CardIdentifier;
-                MongoClient client = new MongoClient(@connectionString);
-                IMongoDatabase dataBase = client.GetDatabase("CardReader");
-                IMongoCollection<CardHolder> collection = dataBase.GetCollection<CardHolder>("CardHolders");
-                collection.InsertOne(CardHolderToAdd);
-                createNewCardHolderContentDialog = new CreateNewCardHolderContentDialog($"Card holder {CardHolderToAdd.FirstName} has been Created Succussfuly.", true);
-                var result = await createNewCardHolderContentDialog.ShowAsync();
+                if (string.IsNullOrEmpty(HolderFirstNameTb.Text))
+                {
+                    fieldsNamesToFill.Add("First name");
+                    isAllFieldsFilled = false;
+                }
+                else
+                {
+                    CardHolderToAdd.FirstName = HolderFirstNameTb.Text;
+                }
+
+                if (string.IsNullOrEmpty(HolderLastNameTb.Text))
+                {
+                    fieldsNamesToFill.Add("Last name");
+                    isAllFieldsFilled = false;
+                }
+                else
+                {
+                    CardHolderToAdd.LastName = HolderLastNameTb.Text;
+                }
+
+
+                if (string.IsNullOrEmpty(HolderIDTb.Text))
+                {
+                    fieldsNamesToFill.Add("ID");
+                    isAllFieldsFilled = false;
+                }
+                else
+                {
+                    CardHolderToAdd.GovernmentId = HolderIDTb.Text;
+                }
+
+
+                if (HolderDOBTb == null)
+                {
+                    fieldsNamesToFill.Add("Date of birth");
+                    isAllFieldsFilled = false;
+                }
+                else
+                {
+                    CardHolderToAdd.DateOfBirth = HolderDOBTb.Date.Date.ToLocalTime();
+                }
+
+
+                if (string.IsNullOrEmpty(CardIdentifier))
+                {
+                    fieldsNamesToFill.Add("\n\nPlease Connect a card and retry.");
+                    isAllFieldsFilled = false;
+                }
+                else
+                {
+                    CardHolderToAdd.CardIdentifier = CardIdentifier;
+                }
+
+                if (isAllFieldsFilled)
+                {
+                    MongoClient client = new MongoClient(@connectionString);
+                    IMongoDatabase dataBase = client.GetDatabase("CardReader");
+                    IMongoCollection<CardHolder> collection = dataBase.GetCollection<CardHolder>("CardHolders");
+                    collection.InsertOne(CardHolderToAdd);
+                    createNewCardHolderContentDialog = new CreateNewCardHolderContentDialog($"Card holder {CardHolderToAdd.FirstName} has been Created Succussfuly.", true);
+                    var result = await createNewCardHolderContentDialog.ShowAsync();
+                    Window.Current.Close();
+                }
+
             }
             catch (Exception ex)
             {

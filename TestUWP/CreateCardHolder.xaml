@@ -6,34 +6,42 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="#FF999999" Height="936" Width="743">
+    Background="#FF999999">
+    <ScrollViewer>
 
-    <Grid Margin="0,0,10,0">
-        <TextBox Name="HolderFirstNameTb" HorizontalAlignment="Left" Margin="29,350,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="90" Width="381" FontSize="36">
-            <TextBox.Header>
-                <TextBlock  Text="First Name:" FontSize="24"></TextBlock>
-            </TextBox.Header>
-        </TextBox>
-        <TextBox Name="HolderLastNameTb" HorizontalAlignment="Left" Margin="29,450,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="90" Width="381" FontSize="34">
-            <TextBox.Header>
-                <TextBlock  Text="Last Name:" FontSize="24"></TextBlock>
-            </TextBox.Header>
-        </TextBox>
-        <TextBox Name="HolderIDTb" HorizontalAlignment="Left" Margin="29,550,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="90" Width="381" FontSize="34">
-            <TextBox.Header>
-                <TextBlock  Text="ID:" FontSize="24"></TextBlock>
-            </TextBox.Header>
-        </TextBox>
-        <DatePicker Name="HolderDOBTb" Margin="29,655,0,0" VerticalAlignment="Top" Height="90" Width="381" FontSize="34">
-            <DatePicker.Header>
-                <TextBlock  Text="Date Of Birth:" FontSize="24"></TextBlock>
-            </DatePicker.Header>
-        </DatePicker>
-        <Button Content="Create Card Holder" Name="BtnCreateHolder"  Margin="194,809,0,0" VerticalAlignment="Top" Height="58" Width="381" Click="BtnCreateHolder_Click"/>
-        <Button Name="btnAddPicture" Click="AddPictureToNewCardHolder" Content="Picture" Margin="493,0,0,0" Height="150" Width="164"/>
-        <Button Name="btnAddRecording" Click="AddRecordingToNewCardHolder" Margin="493,390,0,0" Height="150" Width="164">
-            <Image Source="/Assets/mic.png" />
-        </Button>
-        <Border BorderThickness="1" BorderBrush="Black" Margin="242,53,205,620"/>
-    </Grid>
+        <Grid Margin="0,0,10,0">
+            <TextBlock
+                Margin="30,0,0,0"
+                Grid.Column="1"
+                Style="{StaticResource SubheaderTextBlockStyle}"
+                Text="Card Holder Creation" />
+            <TextBox Name="HolderFirstNameTb" HorizontalAlignment="Left" Margin="29,88,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="90" Width="313" FontSize="36">
+                <TextBox.Header>
+                    <TextBlock  Text="First Name:" FontSize="24"></TextBlock>
+                </TextBox.Header>
+            </TextBox>
+            <TextBox Name="HolderLastNameTb" HorizontalAlignment="Left" Margin="29,188,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="90" Width="313" FontSize="34">
+                <TextBox.Header>
+                    <TextBlock  Text="Last Name:" FontSize="24"></TextBlock>
+                </TextBox.Header>
+            </TextBox>
+            <TextBox Name="HolderIDTb" HorizontalAlignment="Left" Margin="29,288,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="90" Width="313" FontSize="34">
+                <TextBox.Header>
+                    <TextBlock  Text="ID:" FontSize="24"></TextBlock>
+                </TextBox.Header>
+            </TextBox>
+            <DatePicker Name="HolderDOBTb" Margin="29,386,0,0" VerticalAlignment="Top" Height="90" Width="313" FontSize="34">
+                <DatePicker.Header>
+                    <TextBlock  Text="Date Of Birth:" FontSize="24"></TextBlock>
+                </DatePicker.Header>
+            </DatePicker>
+            <Button Content="Create Card Holder" Name="BtnCreateHolder"  Margin="182,516,0,0" Height="58" Width="270" Click="BtnCreateHolder_Click" VerticalAlignment="Top"/>
+            <Button Name="btnAddPicture" Click="AddPictureToNewCardHolder" Margin="404,128,0,0" Height="150" Width="164" VerticalAlignment="Top">
+                <Image Source="/Assets/user1.png" />
+            </Button>
+            <Button Name="btnAddRecording" Click="AddRecordingToNewCardHolder" Margin="404,327,0,0" Height="150" Width="164" VerticalAlignment="Top">
+                <Image Source="/Assets/mic.png" />
+            </Button>
+        </Grid>
+    </ScrollViewer>
 </Page>

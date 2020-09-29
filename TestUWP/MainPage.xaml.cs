@@ -35,6 +35,7 @@ using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.Graphics.Display;
 using TestUWP.Common;
+using Windows.Storage.BulkAccess;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -107,16 +108,16 @@ namespace TestUWP
 
                     string buffer64BaseString = await GetCardBase64String(smartCard);
                     CardHolder cardHolderFromDb = await GetCardHolderFromDB(@buffer64BaseString);
-                    
+
 
                     if (cardHolderFromDb != null)
                     {
-                        string userDropFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+                        string userFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
                         tbOutput.Text += $"Name: {cardHolderFromDb.FirstName} {cardHolderFromDb.LastName}" + Environment.NewLine;
                         tbOutput.Text += $"Date Of Birth: {cardHolderFromDb.DateOfBirth.ToString("dd/MM/yyyy")}" + Environment.NewLine;
-                        await SetImageIframe(userDropFolder, @cardHolderFromDb.PicUrl);
-                        await PlayWelcomeSound(userDropFolder, cardHolderFromDb.VocalFileUrl);
+                        await SetImageIframe(userFolder, @cardHolderFromDb.PicUrl);
+                        await PlayWelcomeSound(userFolder, cardHolderFromDb.VocalFileUrl);
                     }
                     else
                     {
@@ -223,6 +224,7 @@ namespace TestUWP
                 }
                 else if (userSelection == ContentDialogResult.Secondary)
                 {
+                    Tuple<double, double> bounds = SetWindowSizeWindowOnLoad();
                     CoreApplicationView newAV = CoreApplication.CreateNewView();
                     await newAV.Dispatcher.RunAsync(
                                     CoreDispatcherPriority.Normal,
@@ -240,12 +242,22 @@ namespace TestUWP
                                         await ApplicationViewSwitcher.TryShowAsStandaloneAsync(
                                             newAppView.Id,
                                             ViewSizePreference.UseHalf);
-                                        newAppView.TryResizeView(new Size { Width = 743, Height = 936 });
+                                        newAppView.TryResizeView(new Size { Width = bounds.Item1, Height = bounds.Item2 });
                                     });
 
                 }
             }
             return result;
+        }
+        private Tuple<double, double> SetWindowSizeWindowOnLoad()
+        {
+            DisplayInformation view = DisplayInformation.GetForCurrentView();
+
+            Size resolution = new Size(view.ScreenWidthInRawPixels, view.ScreenHeightInRawPixels);
+            double scale = view.ResolutionScale == ResolutionScale.Invalid ? 1 : view.RawPixelsPerViewPixel;
+            Size bounds = new Size(resolution.Width / scale, resolution.Height / scale);
+
+            return Tuple.Create(bounds.Width * 0.4, (bounds.Height / 3) * 2);
         }
     }
 }
