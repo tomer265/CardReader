@@ -14,6 +14,7 @@ using Windows.Graphics.Display;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI;
+using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -34,6 +35,7 @@ namespace TestUWP
     {
         private static CardHolder CardHolderToAdd = new CardHolder();
         private static string CardIdentifier = string.Empty;
+        private static MainPage MainPageInstance = new MainPage();
         public CreateCardHolder()
         {
             this.InitializeComponent();
@@ -41,8 +43,10 @@ namespace TestUWP
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            CardIdentifier = (string)e.Parameter;
-
+            //CardIdentifier = (string)e.Parameter;
+            Tuple<string, MainPage> paramItem  = (Tuple<string, MainPage>)e.Parameter;
+            CardIdentifier = paramItem.Item1;
+            MainPageInstance = paramItem.Item2;
         }
 
         private async void AddPictureToNewCardHolder(object sender, RoutedEventArgs e)
@@ -109,6 +113,8 @@ namespace TestUWP
             List<string> fieldsNamesToFill = new List<string>();
             try
             {
+                CardHolderToAdd.CardIdentifier = CardIdentifier;
+
                 if (string.IsNullOrEmpty(HolderFirstNameTb.Text))
                 {
                     fieldsNamesToFill.Add("First name");
@@ -141,7 +147,7 @@ namespace TestUWP
                 }
 
 
-                if (HolderDOBTb == null)
+                if (HolderDOBTb.SelectedDate == null)
                 {
                     fieldsNamesToFill.Add("Date of birth");
                     isAllFieldsFilled = false;
@@ -151,15 +157,16 @@ namespace TestUWP
                     CardHolderToAdd.DateOfBirth = HolderDOBTb.Date.Date.ToLocalTime();
                 }
 
-
-                if (string.IsNullOrEmpty(CardIdentifier))
+                if (string.IsNullOrEmpty(CardHolderToAdd.PicUrl))
                 {
-                    fieldsNamesToFill.Add("\n\nPlease Connect a card and retry.");
+                    fieldsNamesToFill.Add("Holder's picture");
                     isAllFieldsFilled = false;
                 }
-                else
+
+                if (string.IsNullOrEmpty(CardHolderToAdd.VocalFileUrl))
                 {
-                    CardHolderToAdd.CardIdentifier = CardIdentifier;
+                    fieldsNamesToFill.Add("Holder's welcome recording");
+                    isAllFieldsFilled = false;
                 }
 
                 if (isAllFieldsFilled)
@@ -171,6 +178,14 @@ namespace TestUWP
                     createNewCardHolderContentDialog = new CreateNewCardHolderContentDialog($"Card holder {CardHolderToAdd.FirstName} has been Created Succussfuly.", true);
                     var result = await createNewCardHolderContentDialog.ShowAsync();
                     Window.Current.Close();
+                    MainPageInstance.SetCardHolderInAppWindowInUIThread(CardHolderToAdd);
+                }
+                else
+                {
+                    string message = string.Join(",\n", fieldsNamesToFill);
+                    string errorMessage = string.Concat("Please fill in the following missing fields: \n\n", message);
+                    createNewCardHolderContentDialog = new CreateNewCardHolderContentDialog(errorMessage, false);
+                    var result = await createNewCardHolderContentDialog.ShowAsync();
                 }
 
             }

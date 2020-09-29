@@ -36,6 +36,7 @@ using Windows.UI.ViewManagement;
 using Windows.Graphics.Display;
 using TestUWP.Common;
 using Windows.Storage.BulkAccess;
+using Windows.UI;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -80,7 +81,9 @@ namespace TestUWP
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
+            ScanBtn.Visibility = Visibility.Collapsed;
             await CardAuth();
+            ScanBtn.Visibility = Visibility.Visible;
         }
 
         private void ClearFields()
@@ -112,12 +115,7 @@ namespace TestUWP
 
                     if (cardHolderFromDb != null)
                     {
-                        string userFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-
-                        tbOutput.Text += $"Name: {cardHolderFromDb.FirstName} {cardHolderFromDb.LastName}" + Environment.NewLine;
-                        tbOutput.Text += $"Date Of Birth: {cardHolderFromDb.DateOfBirth.ToString("dd/MM/yyyy")}" + Environment.NewLine;
-                        await SetImageIframe(userFolder, @cardHolderFromDb.PicUrl);
-                        await PlayWelcomeSound(userFolder, cardHolderFromDb.VocalFileUrl);
+                        SetCardHolderInAppWindow(cardHolderFromDb);
                     }
                     else
                     {
@@ -154,6 +152,24 @@ namespace TestUWP
             }
         }
 
+        public async void SetCardHolderInAppWindowInUIThread(CardHolder cardHolderFromDb)
+        {
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                SetCardHolderInAppWindow(cardHolderFromDb);
+            });
+        }
+
+        public async void SetCardHolderInAppWindow(CardHolder cardHolderFromDb)
+        {
+            string userFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+
+            tbOutput.Text += $"Name: {cardHolderFromDb.FirstName} {cardHolderFromDb.LastName}" + Environment.NewLine;
+            tbOutput.Text += $"Date Of Birth: {cardHolderFromDb.DateOfBirth.ToString("dd/MM/yyyy")}" + Environment.NewLine;
+            await SetImageIframe(userFolder, @cardHolderFromDb.PicUrl);
+            await PlayWelcomeSound(userFolder, cardHolderFromDb.VocalFileUrl);
+        }
+
         private async Task PlayWelcomeSound(string userDropFolder, string vocalFileUrl)
         {
             MediaElement mysong = new MediaElement();
@@ -178,11 +194,9 @@ namespace TestUWP
 
         private async void Reader_CardAdded(object sender, CardAddedEventArgs args)
         {
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                ScanBtn.ClickMode = ClickMode.Press;
-                await CardAuth();
-                ScanBtn.ClickMode = ClickMode.Release;
+                Button_Click(sender, null);
             });
         }
 
@@ -235,7 +249,7 @@ namespace TestUWP
                                         newAppView.Title = "Create New Card Holder";
 
                                         Frame frame = new Frame();
-                                        frame.Navigate(typeof(CreateCardHolder), CardIdentifier);
+                                        frame.Navigate(typeof(CreateCardHolder), Tuple.Create(CardIdentifier, this));
                                         newWindow.Content = frame;
                                         newWindow.Activate();
 
