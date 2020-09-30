@@ -175,9 +175,12 @@ namespace TestUWP
             MediaElement mysong = new MediaElement();
             StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(@userDropFolder);
             StorageFile file = await folder.GetFileAsync(@vocalFileUrl);
-            var stream = await file.OpenAsync(FileAccessMode.Read);
-            mysong.SetSource(stream, file.ContentType);
-            mysong.Play();
+            using (IRandomAccessStream stream = await file.OpenAsync(FileAccessMode.Read))
+            {
+                mysong.SetSource(stream, file.ContentType);
+                mysong.Play();
+            }
+
         }
 
         private async Task SetImageIframe(string userDropFolder, string fileUrl)
@@ -185,7 +188,7 @@ namespace TestUWP
             BitmapImage bitmap = new BitmapImage();
             StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(@userDropFolder);
             StorageFile file = await folder.GetFileAsync(@fileUrl);
-            using (var stream = await file.OpenAsync(FileAccessMode.Read))
+            using (IRandomAccessStream stream = await file.OpenAsync(FileAccessMode.Read))
             {
                 bitmap.SetSource(stream);
                 imageBox.Source = bitmap;
