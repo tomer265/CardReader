@@ -43,7 +43,6 @@ namespace UwpCardReader
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            //CardIdentifier = (string)e.Parameter;
             Tuple<string, MainPage> paramItem  = (Tuple<string, MainPage>)e.Parameter;
             CardIdentifier = paramItem.Item1;
             MainPageInstance = paramItem.Item2;
