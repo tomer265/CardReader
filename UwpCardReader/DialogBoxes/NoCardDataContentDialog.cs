@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 
-namespace TestUWP.DialogBoxes
+namespace UwpCardReader.DialogBoxes
 {
     public sealed class NoCardDataContentDialog : ContentDialog
     {

@@ -17,7 +17,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-namespace TestUWP
+namespace UwpCardReader
 {
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.

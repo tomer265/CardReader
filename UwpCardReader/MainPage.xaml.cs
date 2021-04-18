@@ -19,7 +19,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using System.Text;
-using TestUWP.Models;
+using UwpCardReader.Models;
 using System.Xml.Linq;
 using System.Xml;
 using MongoDB.Driver;
@@ -29,18 +29,18 @@ using Windows.UI.Xaml.Media.Imaging;
 using Windows.Storage.Pickers;
 using Windows.UI.Popups;
 using System.Net;
-using TestUWP.DialogBoxes;
+using UwpCardReader.DialogBoxes;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.Graphics.Display;
-using TestUWP.Common;
+using UwpCardReader.Common;
 using Windows.Storage.BulkAccess;
 using Windows.UI;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
-namespace TestUWP
+namespace UwpCardReader
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.

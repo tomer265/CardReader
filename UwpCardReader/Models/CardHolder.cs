@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TestUWP.Models
+namespace UwpCardReader.Models
 {
     public class CardHolder
     {
