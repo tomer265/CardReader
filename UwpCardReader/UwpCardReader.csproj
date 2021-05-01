@@ -7,8 +7,8 @@
     <ProjectGuid>{46BB00C0-5A84-4EDC-9CB0-AF2EC0F47556}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TestUWP</RootNamespace>
-    <AssemblyName>TestUWP</AssemblyName>
+    <RootNamespace>CardReader</RootNamespace>
+    <AssemblyName>CardReader</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.18362.0</TargetPlatformVersion>

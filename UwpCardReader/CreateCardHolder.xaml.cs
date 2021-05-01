@@ -33,7 +33,7 @@ namespace UwpCardReader
     /// </summary>
     public sealed partial class CreateCardHolder : Page
     {
-        private static CardHolder CardHolderToAdd = new CardHolder();
+        private static readonly CardHolder CardHolderToAdd = new CardHolder();
         private static string CardIdentifier = string.Empty;
         private static MainPage MainPageInstance = new MainPage();
         public CreateCardHolder()
